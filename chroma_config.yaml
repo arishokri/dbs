@@ -7,7 +7,7 @@ open_telemetry:
 port: 8000
 listen_address: "0.0.0.0"
 max_payload_size_bytes: 41943040
-cors_allow_origins: ["*"]
+cors_allow_origins: ["any"]
 
 ####################
 # General settings #
