@@ -10,7 +10,7 @@ services:
     networks:
       - net
     volumes:
-      - postgres_data:/var/lib/postgresql/data # Persist data
+      - ./data/postgres_data:/var/lib/postgresql/data # Persist data
     restart: unless-stopped
 
   pgvector:
@@ -24,7 +24,7 @@ services:
     networks:
       - net
     volumes:
-      - pgvector_data:/var/lib/postgresql/data # Persist data
+      - ./data/pgvector_data:/var/lib/postgresql/data # Persist data
     restart: unless-stopped
 
   mongo:
@@ -38,8 +38,8 @@ services:
     networks:
       - net
     volumes:
-      - mongo_data:/data/db # Persist data
-      - mongo_config_data:/data/configdb # Persist config data
+      - ./data/mongo_data:/data/db # Persist data
+      - ./data/mongo_config_data:/data/configdb # Persist config data
     restart: unless-stopped
 
   chroma:
@@ -52,17 +52,10 @@ services:
     networks:
       - net
     volumes:
-      - chroma_data:/data # Map local chroma-data directory to the container's /data
+      - ./data/chroma_data:/data # Map local chroma-data directory to the container's /data
       - ./chroma_config.yaml:/config.yaml # Map the local config.yaml to the container's config.yaml
     restart: unless-stopped
 
 networks:
   net:
     driver: bridge
-
-volumes:
-  postgres_data:
-  pgvector_data:
-  mongo_data:
-  mongo_config_data:
-  chroma_data:
