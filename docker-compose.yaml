@@ -13,6 +13,20 @@ services:
       - postgres_data:/var/lib/postgresql/data # Persist data
     restart: unless-stopped
 
+  pgvector:
+    image: pgvector/pgvector:pg17 # or use 'build: .' if using custom Dockerfile
+    container_name: my_pgvector
+    ports:
+      - "25432:5432" # Expose PostgreSQL on port 5432
+    environment:
+      POSTGRES_USER: postgres # Set a username for PostgreSQL
+      POSTGRES_PASSWORD: ${DB_PASSWORD} # Set a password for PostgreSQL
+    networks:
+      - net
+    volumes:
+      - pgvector_data:/var/lib/postgresql/data # Persist data
+    restart: unless-stopped
+
   mongo:
     image: mongodb/mongodb-community-server:latest
     container_name: my_mongo
@@ -42,30 +56,13 @@ services:
       - ./chroma_config.yaml:/config.yaml # Map the local config.yaml to the container's config.yaml
     restart: unless-stopped
 
-  elasticsearch:
-    image: docker.elastic.co/elasticsearch/elasticsearch-wolfi:8.17.3
-    container_name: my_elasticsearch
-    ports:
-      - "9200:9200" # Expose Elasticsearch on port 9200
-    environment:
-      ELASTIC_USERNAME: elastic # Set a username for Elasticsearch
-      ELASTIC_PASSWORD: ${DB_PASSWORD} # Set a password for Elasticsearch
-      discovery.type: single-node # Set the discovery type to single-node
-      xpack.security.http.ssl.enabled: false
-      xpack.license.self_generated.type: trial
-    networks:
-      - net
-    volumes:
-      - elasticsearch_data:/usr/share/elasticsearch/data # Persist data
-    restart: unless-stopped
-
 networks:
   net:
     driver: bridge
 
 volumes:
   postgres_data:
+  pgvector_data:
   mongo_data:
   mongo_config_data:
   chroma_data:
-  elasticsearch_data:
